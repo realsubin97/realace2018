@@ -1,0 +1,33 @@
+<html>
+<head>
+    <title>미세먼지 예측 사이트</title>
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script>
+            function Move(loc){
+                var offset = $("#"+loc).offset();
+                $('html, body').animate({scrollTop : offset.top}, 400);
+            }
+    </script>
+
+</head>
+<body>
+    <a href="/main"><img src="public/images/log.png" width="100" height="100"></a><p>
+    <button onclick="Move('a')" >오늘의 미세먼지</button>
+    <button onclick="Move('year')" >연간 예측</button>
+    <button onclick="Move('c')" >미세먼지 챗봇</button>
+
+    <div id="a">
+        
+    </div>
+
+    <div id="year">
+       
+    </div>
+
+    <div id="c">
+       
+    </div>
+
+</body>
+</html>
