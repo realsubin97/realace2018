@@ -1,169 +1,188 @@
-var database;
-var MemberSchema;
-var MemberModel;
+var db=require("../config/db");
 
-var init=function(db,schema,model){
-    database=db;
-    MemberSchema=schema;
-    MemberModel=model;
-}
+var PythonShell = require('python-shell');
 
-var login=function(req,res){
-    console.log('user 모듈 안에 있는 login 호출됨');
+var options = {
+  mode: 'text',
+  pythonPath: '',
+  scriptPath:'./python',
+  pythonOptions: ['-u'],
+};
 
-    var paramId=req.body.id||req.query.id;
-    var paramPassword=req.body.password||req.query.password;
+module.exports=function(router){
 
-    if(database){
-        authUser(database,paramId,paramPassword,function(err,docs){
-            if(err) throw err;
+    router.all('/',function(req,res){
+        res.redirect('/main');
+    });
 
-            if(docs){
-                console.dir(docs);
+    router.all('/main',function(req,res){
+        PythonShell.run('chatbot_ver1.2_py.py', options, function (err, results) {
+            if (err) throw err;
+            console.log('results: %j', results);      
+          });
+          
+        res.render('main');
+    });
 
-                var membername=docs[0].name;
+    router.route('/process/chat').post(function(req,res){
+        console.log('/process/chat 호출됨');
+        
+        var inputQuestion=req.body.inputQue;
 
-                res.writeHead('200',{'Content-Type':'text/html;charset=utf8'});
-                res.write('<h1>로그인 성공</h1>');
-                res.write('<div><p> 아이디 : '+paramId+'</p></div>');
-                res.write('<div><p> 사용자 이름 : '+membername+'</p></div><br>');
-                res.write("<a href='/public/login.html'>다시 로그인</a>");
-                res.write("<a href='/public/search.html'>약품 검색 페이지</a>");
-                res.end();
-            }else{
-                res.writeHead('200',{'Content-Type':'text/html;charset=utf8'});
-                res.write('<h1>로그인 실패</h1>');
-                res.write("<a href='/public/login.html'>다시 로그인</a>");
-                res.end();
-            }
-        });
-    }else{
-        res.writeHead('200',{'Content-Type':'text/html;charset=utf8'});
-        res.write('<h1>데이터베이스를 찾을 수 없습니다.</h1>');
-        res.end();
-    }
-}
+        console.log(inputQuestion);
+    });
 
-var listuser=function(req,res){
-    console.log('user 모듈 안에 있는 listuser 호출됨');
+    router.route('/process/withdraw').post(function(req,res){
+        console.log('/process/withdraw 호출됨');
 
-    if(database){
-        MemberModel.findAll(function(err,results){
+        var userId=req.body.id;
+        var userPass=req.body.password;
+
+        checkUser(userId,userPass,function(err,result){
             if(err){
-                console.log('오류 발생');
-                res.writeHead('200',{'Content-Type':'text/html;charset=utf8'});
-                res.write('<h2>조회 중 오류 발생');
+                console.error("사용자 삭제 중 에러 발생"+err.stack);
+
+                res.writeHeader('400',{'Content-Type':'text/html;charset=utf-8'});
+                res.write('<h2>사용자 삭제 중 에러 발생</h2>');
+                res.write('<p>'+err.stack+'</p>');
                 res.end();
                 return;
-            }
-            if(results){
-                console.dir(results);
-
-                res.writeHead('200',{'Content-Type':'text/html;charset="utf-8'});
-                res.write('<h2>사용자 리스트</h2>');
-                res.write('<div><ul>');
-                for(var i=0;i<results.length;i++){
-                    var curId=results[i]._doc.id;
-                    var curName=results[i]._doc.name;
-                    res.write('<li>#'+i+' : '+curId+', '+curName);
-                }
-                res.write('</ul></div>');
-                res.end();
+            }else if(result){
+                delUser(userId,function(err,result){
+                    if(err){
+                        console.log('탈퇴 실패');
+                    }else{
+                        console.log('탈퇴 완료');
+                    }
+                })
+                res.send("<script>alert('탈퇴가 완료 되었습니다.');location.href='/logout'</script>");
+                console.log('유저 삭제 완료');
             }
         });
-    }else{
-        res.writeHead('200',{'Content-Type':'text/html;charset="utf-8'});
-        res.write('<h2>데이터 베이스 연결 실패!!</h2>');
-        res.end();
-    }
-}
+    });
 
-var adduser=function(req,res){
-    console.log('user 모듈 안에 있는 adduser 호출됨');
+    router.route('/process/modify').post(function(req,res){
+        console.log('/process/modify 호출됨');
 
-    var paramId=req.body.id;
-    var paramPassword=req.body.password;
-    var paramName=req.body.name;
-    var gender=req.body.gender;
-    var location=req.body.location;
-    var phone=req.body.phoneNumber;
+        var id=req.body.id;
+        var pass=req.body.password;
+        var name=req.body.name;
+        var age=req.body.age;
+        var gender=req.body.gender;
 
+        modifyUser(id,pass,name,age,gender,function(err,result){
+            if(err){
+                console.error("사용자 수정 중 에러 발생"+err.stack);
 
-    if(database){
-        addUser(database,paramId,paramPassword,paramName,gender,location,phone,function(err,result){
-            if(err) throw err;
-
-            if(result){
-                console.dir(result);
-                console.log(gender+" "+location+" "+phone);
-
-                res.writeHead('200',{'Content-Type':'text/html;charset=utf8'});
-                res.write('<h2>사용자 추가 완료</h2>');
-                res.write("<a href='/public/login.html'>다시 로그인</a>");
-                res.write("<a href='/public/adduser.html'>사용자 추가</a>");
+                res.writeHeader('400',{'Content-Type':'text/html;charset=utf-8'});
+                res.write('<h2>사용자 수정 중 에러 발생</h2>');
+                res.write('<p>'+err.stack+'</p>');
                 res.end();
+                return;
+            }else if(result){
+                res.send("<script>alert('회원 수정이 완료 되었습니다.');location.href='/logout'</script>");
+                console.log('회원 수정 완료');
+            }
+        });
+    });
+
+    function addUser(id,pass,name,age,gender,callback){
+        console.log('addUser 호출됨');
+
+        db.get().query(sql.insertMem,[id,pass,name,age,gender],function(err,result){
+            if(err){
+                console.log('사용자 추가 중 에러 발생');
+                callback(err,null);
+                return;
             }else{
-                res.writeHead('200',{'Content-Type':'text/html;charset=utf8'});
-                res.write('<h2>사용자 추가 실패</h2>');
-                res.write("<a href='/public/login.html'>다시 로그인</a>");
-                res.write("<a href='/public/adduser.html'>사용자 추가</a>");
-                res.end();
-            }
-
-        });
-    }else{
-        res.writeHead('200',{'Content-Type':'text/html;charset=utf8'});
-        res.write('<h2>데이터베이스 연결 실패</h2>');
-        res.end();
-    }
-}
-
-var authUser=function(database,id,password,callback){
-    console.log('authUser 호출됨');
-
-    MemberModel.findById(id,function(err,result){
-        if(err){
-            callback(err,null);
-            return;
-        }
-        console.log('아이디 [%s]로 사용자 검색',id);
-        console.dir(result);
-
-        if(result.length>0){
-            console.log('일치하는 사용자 찾음');
-
-            var user=new MemberModel({"id":id});
-            var authenticated=user.authenticate(password,result[0]._doc.salt,result[0]._doc.hashed_password);
-
-            if(authenticated){
-                console.log('비밀번호 일치함');
+                console.log('사용자 추가 완료');
                 callback(null,result);
-            }else{
-                console.log('일치하지 않음');
-                callback(null,null);
             }
-        }else{
-            console.log('일치하는 사용자 없음');
-            callback(null,null);
-        }
-    });
+        });
+    }
+
+    function addRank(id,callback){
+        console.log('addRank 호출됨');
+
+        db.get().query(sql.insertRank,id,function(err,result){
+            var user=result[0];
+
+            if(err){
+                callback(err,null);
+            }else{
+                callback(null,result);
+            }
+        });
+    }
+
+    function checkUser(id,password,callback){
+        console.log('checkUser 호출됨');
+
+        db.get().query(sql.checkIdPass,[id],function(err,result){
+            var user=result[0];
+            if(err){
+                console.log('사용자 조회중 에러발생');
+                callback(err,null);
+                return;
+            }
+            else if(!user){
+                console.log('입력하신 아이디는 없는 아이디 입니다.');
+                callback(null,req.flash('failure','입력하신 아이디는 없는 아이디 입니다.'));
+                return;
+            }
+            else if(user.user_pass != password){   
+                console.log('비밀번호가 틀립니다.');
+                callback(null,req.flash('failure','비밀번호가 틀립니다.'));
+                return;
+            }else{
+                callback(null,user);
+                return;
+            }
+        })
+    }
+
+    function delUser(id,callback){
+        console.log('delUser 호출됨');
+
+        db.get().query(sql.deleteMem,id,function(err,result){
+            if(err){
+                callback(err,null);
+                return;
+            }
+            else{
+                callback(null,result);
+                return;
+            }
+        })
+    }
+
+    function modifyUser(id,pass,name,age,sex,callback){
+        console.log('modifyUser 호출됨');
+
+        db.get().query(sql.modifyMem,[pass,name,age,sex,id],function(err,result){
+            if(err){
+                callback(err,null);
+                return;
+            } else{
+                callback(null,result)
+                return;
+            }
+        })
+    }
+
+    router.all("/checkId",function(req,res){
+        var checked;
+
+        var id=req.body.id;
+        db.get().query(sql.selectId,id,function(err,result){
+            if(err)
+                throw err;
+            if(result[0].cnt==1)
+                checked="NO";
+            
+            else
+                checked="YES";        
+            res.send({result:checked});
+        })
+    })
 }
-
-var addUser=function(database,id,password,name,gender,location,phone,callback){
-    console.log('addUser 호출됨');
-
-    var user=new MemberModel({"id":id,"password":password,"name":name,"gender":gender,"location":location,"phoneNumber":phone});
-
-    user.save(function(err){
-        if(err){
-            callback(err,null);
-        }
-        console.log('사용자 데이터 추가');
-        callback(null,user);
-    });
-}
-module.exports.init=init
-module.exports.login=login;
-module.exports.listuser=listuser;
-module.exports.adduser=adduser;
-

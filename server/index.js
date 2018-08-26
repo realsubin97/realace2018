@@ -1,3 +1,4 @@
+
 var http = require('http');
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -30,9 +31,9 @@ var router = express.Router();
 
 app.use('/',router); //경로에 /가 들어오면 router에서 경로를 잡게 한다.
 
-router.all('/main',function(req,res){
-  res.render('main');
-})
+var mainRouter=require("./routes/main_route");
+
+mainRouter(router);
 
 //모든 경로에 대해 잘못된 경로로 접근시 처리
 app.all('*', function(req, res) {
