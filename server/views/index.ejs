@@ -1,0 +1,93 @@
+<!-- subin first & init -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>ACE Project</title>
+
+    <!-- Bootstrap core CSS-->
+    <link href="../public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../public/css/sb-admin.css" rel="stylesheet">
+
+  </head>
+
+  <body id="page-top">
+	<!-- header-->
+    <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+      <a class="navbar-brand mr-1" href="/index">A Circulating environment </a>
+    </nav>
+
+    <div id="wrapper">
+
+      <!-- Sidebar -->
+      <ul class="sidebar navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/index">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>fine dust</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/chatbot">
+            <i class="fas fa-fw fa-table"></i>
+            <span>UnneeYa</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/predust">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>Pre-dust</span></a>
+        </li>
+      </ul>
+	  
+	  <!-- 여기서부터 main 메뉴의 내용 들어갈 자리 -->
+
+      <div id="content-wrapper">
+        <div class="container-fluid">
+		
+          <!-- 미세먼지 지도 들어갈 자리-->
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fas fa-chart-area"></i>
+              Area Fine Dust</div>
+            <div class="card-body">
+              <canvas id="myAreaChart" width="100%" height="30"></canvas>
+
+			  <!-- 지도 이 div 밑에 넣으면 됨 -->
+                  <iframe
+                  width="900"
+                  height="700"
+                  src="http://localhost:3000/public/results.html">
+                </iframe>
+            </div>
+          </div>
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <footer class="sticky-footer">
+          <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+              <span>Copyright © Your Website 2018</span><BR>
+			  <span> RedHatPinkCodingFest TEAM2 </span>
+            </div>
+          </div>
+        </footer>
+
+      </div>
+      <!-- /.content-wrapper -->
+
+    </div>
+
+  </body>
+
+</html>

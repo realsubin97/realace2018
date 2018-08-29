@@ -13,151 +13,6 @@
             }
     </script>
 
-    <script type=" text/javascript ">  
-        var date=new Date();
-
-        function addZeros(num, digit) { // 자릿수 맞춰주기
-            var zero = '';
-            num = num.toString();
-            if (num.length < digit) {
-                for (i = 0; i < digit - num.length; i++) {
-                zero += '0';
-                }
-            }
-            return zero + num;
-        }
-
-        jQuery(function($){
-            $( "#chatin").on( "click" , function() {
-                var txt=$('#inputQue').val();
-                $('inputQue').val('')
-                $( "#from_me" ).append("<li><span id='nm'>나</span><span id='co'>"+txt+"</span><span id='tm'>"+date.getHours()+":"+addZeros(date.getMinutes(),2)+"</span></li><br>");
-            });          
-            $( "#test li" ).on( "click" , function() {     
-
-                alert($(this).text());     
-            });           
-        });  
-    </script>
-
-    <style>
-        #chat_frame{
-            width: 380px;
-            padding: 10px 50px 10px 10px;
-            background-color:#a1c0d6;
-        }
-        #chat_frame > ul{
-            position: relative;
-            width: 350px;
-            z-index: 0;
-        }
-        #chat_frame > ul > li > span {
-            font-family:'Kakao';
-        }
-
-        ul#from_me {
-            text-align: right;
-        }
-        ul#from_me > li {
-            display: inline-block;
-            text-align: left;
-            position: relative;
-            background: #FCCE00;
-            word-wrap: break-word;
-            max-width: 240px;
-            padding:10px;
-            margin-top: 10px;
-            margin-bottom: 30px;
-            border-radius: 10px;
-        }
-        ul#from_me > li:after {
-            content: '';
-            position: absolute;
-            height: 25px;
-            width: 25px;
-            border-radius: 12.5px;
-            z-index: -1;
-            background: #a1c0d6;
-            bottom: -10px;
-            right: -13px;
-        }
-        ul#from_me > li:before {
-            content: '';
-            position: absolute;
-            height: 25px;
-            width: 25px;
-            border-radius: 12.5px;
-            z-index: -1;
-            background: #FCCE00;
-            bottom: -6px;
-            right: -4px;
-        }
-
-        ul#from_me > li > span#nm {
-            position: absolute;
-            right:0px;
-            top:-20px;
-        }
-
-        ul#from_me > li > span#tm {
-            position: absolute;
-            font-size: 14px;
-            left:-55px;
-            bottom:0px;
-        }
-
-        ul#from_you > li {
-            display: inline-block;
-            position: relative;
-            
-            background: #FFFFFD;
-            
-            word-wrap: break-word;
-            max-width: 240px;
-            padding:10px;
-            margin-top: 10px;
-            margin-bottom: 30px;
-            border-radius: 10px;
-        }
-        ul#from_you > li:after {
-            content: '';
-            position: absolute;
-            height: 25px;
-            width: 25px;
-            border-radius: 12.5px;
-            z-index: -1;
-            background: #a1c0d6;
-            bottom: -10px;
-            left: -13px;
-        }
-        ul#from_you > li:before {
-            content: '';
-            position: absolute;
-            height: 25px;
-            width: 25px;
-            border-radius: 12.5px;
-            z-index: -1;
-            background: #FFFFFD;
-            bottom: -6px;
-            left: -4px;
-        }
-        ul#from_you {
-            text-align: left;
-        }
-
-        ul#from_you > li > span#nm {
-            position: absolute;
-            left:0px;
-            top:-20px;
-        }
-
-        ul#from_you > li > span#tm {
-            position: absolute;
-            font-size: 14px;
-            right:-55px;
-            bottom:0px;
-        }
-    </style>
 </head>
 <body>
     <a href="/main"><img src="public/images/log.png" width="100" height="100"></a><p>
@@ -165,43 +20,27 @@
     <button onclick="Move('prediction')" >연간 예측</button>
     <button onclick="Move('chat_frame')" >미세먼지 챗봇</button>
     
-    <h1>미세먼지 지도</h1><p>
-    <div id="map">
+    <h1 id="map">미세먼지 지도</h1><p>
+    <div >
 
         <img src="public/images/korea_map.jpg" width="400" height="800"></a><p>
         
     </div>
 
-    <h1>미세먼지 예측</h1><p>
-    <div id="prediction">
+    <h1 id="prediction">미세먼지 예측</h1><p>
+    <div >
         <img src="public/images/ex_barplot.png" width="800" height="500"></a><p>
     </div>
 
-    <h1>챗봇</h1><p>
-        <div id="chat_frame">    
-            <ul id="from_you">
-                <li>
-                    <span id="nm">김사원</span>
-                    <span id="co">ㅎㅇ</span>
-                    <span id="tm">1:30pm</span>
-                </li>
-                <br>
-            </ul>
-            <ul id="from_me">
-                <li>
-                    <span id="nm">양사원</span>
-                    <span id="co">ㅎㅇ</span>
-                    <span id="tm">1:30pm</span>
-                </li>
-                <br>
-            </ul>
+    <h1 id="chat_frame">챗봇</h1><p>
+        <div >    
+            <iframe
+                allow="microphone;"
+                width="350"
+                height="430"
+                src="https://console.dialogflow.com/api-client/demo/embedded/faf6a2c8-034e-4ec6-bc6d-7faed61f0ce7">
+            </iframe>
         </div>
-        <form method="post" action="/process/chat">
-            <div id="chat_input" width="380px">
-                <input id="inputQue" type="text" name="inputQue"></input>
-                <button id="chatin">전송</button>
-            </div>
-        </form>
         
 </body>
 </html>

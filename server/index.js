@@ -6,14 +6,11 @@ var static = require('serve-static');
 var path = require('path');
 var session = require('express-session'); 
 
-//db설정을 불러온다
-var db = require('./config/db');
-
 //express 객체 생성
 var app = express();
 
 //port라는 속성에 3000이라는 값을 설정
-var port = process.env.PORT || 3000;
+var port = process.env.PORT;
 
 //ejs를 사용하기위해 view engine에 등록
 app.set('view engine','ejs');
