@@ -6,9 +6,6 @@ var static = require('serve-static');
 var path = require('path');
 var session = require('express-session'); 
 
-//db설정을 불러온다
-var db = require('./config/db');
-
 //express 객체 생성
 var app = express();
 

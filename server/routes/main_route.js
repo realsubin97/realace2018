@@ -1,13 +1,4 @@
-var db=require("../config/db");
 
-var PythonShell = require('python-shell');
-
-var options = {
-  mode: 'text',
-  pythonPath: '',
-  scriptPath:'./python',
-  pythonOptions: ['-u'],
-};
 
 module.exports=function(router){
 
@@ -16,21 +7,20 @@ module.exports=function(router){
     });
 
     router.all('/main',function(req,res){
-        PythonShell.run('chatbot_ver1.2_py.py', options, function (err, results) {
-            if (err) throw err;
-            console.log('results: %j', results);      
-          });
-          
+        console.log('main 실행')
         res.render('main');
     });
 
-    router.route('/process/chat').post(function(req,res){
-        console.log('/process/chat 호출됨');
-        
-        var inputQuestion=req.body.inputQue;
-
-        console.log(inputQuestion);
+    router.all('/index',function(req,res){
+        console.log('index 실행')
+        res.render('index');
     });
+
+    router.all('/folium',function(req,res){
+        console.log('folium 실행')
+        res.render('folium');
+    });
+
 
     router.route('/process/withdraw').post(function(req,res){
         console.log('/process/withdraw 호출됨');
