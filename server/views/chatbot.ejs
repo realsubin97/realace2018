@@ -1,5 +1,3 @@
-<!-- subin first & init -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ACE Project</title>
+    <title>SB Admin - Tables</title>
 
     <!-- Bootstrap core CSS-->
     <link href="../public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -48,28 +46,28 @@
             <span>Pre-dust</span></a>
         </li>
       </ul>
-	  
-	  <!-- 여기서부터 main 메뉴의 내용 들어갈 자리 -->
 
       <div id="content-wrapper">
+
         <div class="container-fluid">
-		
-          <!-- 미세먼지 지도 들어갈 자리-->
+
+          <!-- DataTables Example -->
           <div class="card mb-3">
             <div class="card-header">
-              <i class="fas fa-chart-area"></i>
-              Area Fine Dust</div>
+              <i class="fas fa-table"></i>
+              UnneeYa</div>
             <div class="card-body">
-              <canvas id="myAreaChart" width="100%" height="30"></canvas>
-
-			  <!-- 지도 이 div 밑에 넣으면 됨 -->
-                  <iframe
-                  width="900"
+              <div class="table-responsive">
+                <iframe
+                  allow="microphone;"
+                  width="500"
                   height="700"
-                  src="http://localhost:3000/public/results.html">
+                  src="https://console.dialogflow.com/api-client/demo/embedded/faf6a2c8-034e-4ec6-bc6d-7faed61f0ce7">
                 </iframe>
+              </div>
             </div>
           </div>
+
         </div>
         <!-- /.container-fluid -->
 
@@ -87,6 +85,7 @@
       <!-- /.content-wrapper -->
 
     </div>
+    <!-- /#wrapper -->
 
   </body>
 

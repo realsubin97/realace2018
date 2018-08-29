@@ -20,7 +20,7 @@ exports.pmFunction = functions.https.onRequest((request, response) => {
         const name=request.body.queryResult.parameters.Myname;
 
         if(name&&name.length>0){
-            agent.add("불렀냐?ㅋㅋㅋzz??");
+            agent.add("불렀냐, 동생아?");
         }
     }
 
@@ -38,7 +38,7 @@ exports.pmFunction = functions.https.onRequest((request, response) => {
         var cityF=false;
         var succ=false;
 
-        var d = moment().tz('Asia/Seoul').format('YYYY-MM-DD 02:00');
+        var d = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:00');
         return dbLocation.then((data)=>{
             data.forEach(function(snapshot){
                 const key=snapshot.key;
